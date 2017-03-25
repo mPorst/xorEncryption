@@ -1,0 +1,2 @@
+Code aufteilen
+pseudo random number generator zum erzeugen eines langen Keys einbauen
