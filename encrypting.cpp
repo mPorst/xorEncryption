@@ -10,6 +10,10 @@
 
 #include "encrypting.h"
 
+#define DEBUG1
+//#define N 250000000
+#define N 25
+
 namespace po = boost::program_options; // boost namespace abbreviation
 
 void parseCommandLine(int argc, char** argv, std::string* fileName, bool* filenameSet, bool* helpSet)
@@ -94,28 +98,23 @@ void encryptFile(std::string file, std::string key)
 	deleteUnencrypted(file);
 }	
 
-
 std::string* lengthenKey(std::string* key)
 {
 	std::string seed;
 	std::ostringstream oss;
 
-	for(unsigned int i=0; i<(key->size()); i++)
+	for(unsigned int i=0; i<(key->size()); i++) // write key to string stream
 	{
-		oss << (int)key->at(i);
+		oss << (int)key->at(i);  // 1 letter gets converted to a number yyy where y is a decimal digit (ASCII code)
 	}
 	seed = oss.str();
-	#ifdef DEBUG1
-	std::cout << seed << std::endl;
-	std::cout << oss.str() << std::endl;
-	#endif
 	std::string::size_type sz;
-	while(seed.size() > 9)
+	while(seed.size() > 9) // cut off digits from key for seed creation (bad)
 	{
 		seed.erase(seed.begin(), seed.begin()+1);
 		std::cout << seed << std::endl;
 	}
-	int iSeed = std::stoi(seed, &sz);
+	int iSeed = std::stoi(seed, &sz); // iSeed is now the appended y's (see comments before) but cut off to a maximum of 9 digits (so it does not exceed 2**32-1
 
 	std::mersenne_twister_engine<std::uint_fast32_t, 32, 644, 397, 31,
                              0x9908b0df, 11,
@@ -124,16 +123,24 @@ std::string* lengthenKey(std::string* key)
                              0xefc60000, 18, 1812433253> randomGenerator(iSeed);
 
 	std::string* longKey = new std::string();
-	int temp;
-	for(int i=0; i<(250000000); i++)
+	char temp;
+	for(int i=0; i<(N); i++) //actual key generation //N should be determined by file size
 	{
-		oss.str("");
-		oss.clear();
 		temp = randomGenerator()%255;
-		oss << temp;		
-		longKey->append(oss.str());
+		std::cout << "generated: " << temp << std::endl;
+		longKey->push_back(temp); // here the digits get appended. how to tell c++ to append ASCII char ?
+		std::cout << "longKey: " << longKey->at(i) << std::endl;
 	}
 	std::cout << "longKey has been created " << std::endl;
+
+	#ifdef DEBUG1
+	for(unsigned int i=0; i<seed.size(); i++)
+	{
+		std::cout << i <<": " << seed.at(i) << std::endl;
+	}
+	std::cout << seed.at(3) << std::endl;
+	std::cout << seed.at(3) + 122 << std::endl;
+	#endif
 
 	return longKey;
 }
