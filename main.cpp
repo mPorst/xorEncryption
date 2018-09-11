@@ -29,15 +29,17 @@ int main(int argc, char** argv)
 
 	std::cout << "File encryption/decryption program using XOR algorithm" <<std::endl;
 	std::string key;
-	std::string* longKey = new std::string();
+	//std::string* longKey = new std::string();
 	getString(&key);
-	longKey = lengthenKey(&key);
+//	longKey = lengthenKey(&key);
+	
 	if(filenameSet == false)
 	{
 		std::cout << "choose which file to encrypt" << std::endl;
 		std::cin >> fileName;
 	}	
-	encryptFile(fileName, *longKey);	
+
+	encryptFile(fileName, key);	
 	std::cout << "operation succeeded" << std::endl;
 return 0;
 }

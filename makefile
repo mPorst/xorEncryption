@@ -1,5 +1,5 @@
 CC = g++
-OBJS = main.o encrypting.o
+OBJS = main.o encrypting.o fileHelper.o
 DEBUG = -g
 CFLAGS = -Wall -c -static -std=c++11 $(DEBUG) $(INC) $(LIB)
 LFLAGS = -Wall -static -std=c++11 $(DEBUG) $(INC) $(LIB)
@@ -15,6 +15,9 @@ main.o: main.cpp
 
 encrypting.o: encrypting.cpp
 	$(CC) $(CFLAGS) encrypting.cpp
+
+fileHelper.o: fileHelper.cpp
+	$(CC) $(CFLAGS) fileHelper.cpp
 
 clean: 
 	\rm *.o encryption 
