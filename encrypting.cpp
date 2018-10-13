@@ -6,54 +6,14 @@
 #include <sstream>
 #include <random>
 #include <fstream>
-#include <boost/program_options.hpp>
 
 
 #include "encrypting.h"
 
-#define DEBUG1
+#undef DEBUG
+#undef DEBUG1
 //#define N 250000000
 //#define N 2500
-
-namespace po = boost::program_options; // boost namespace abbreviation
-
-void parseCommandLine(int argc, char** argv, std::string* fileName, bool* filenameSet, bool* helpSet)
-{
-	
-	// program options part
-	// 
-		po::options_description desc("Allowed options");
-		desc.add_options()
-		("help", "XOR encryption/decryption program.")
-		("filename", po::value<std::string>(), "file name")
-		;
-
-		po::variables_map vm;
-		po::store(po::parse_command_line(argc, argv, desc), vm);
-		po::notify(vm);    
-
-		if (vm.count("help")) {
-		*helpSet = true;
-		std::cout << "Encryption and decryption with the XOR algorithm is the same process"
-		<< "\n To decrypt, issue the same key as you used for encryption."
-		<< std::endl
-		<< "Here comes the usual help site: " << std::endl;
-		std::cout << desc << "\n";
-		return;
-		}
-
-		if (vm.count("filename")) {
-		#ifdef DEBUG
-			std::cout << "filename: " 
-			<< vm["filename"].as<std::string>() << ".\n";
-		#endif
-			*fileName = vm["filename"].as<std::string>();	
-			*filenameSet = true;
-			
-		} else {
-		std::cout << "\n";
-		}
-}
 
 void getString(std::string* key)
 {
@@ -141,9 +101,11 @@ std::string* lengthenKey(std::string* key, unsigned int fileLength)
 		longKey->push_back(temp);
 		//std::cout << "longKey: " << longKey->at(i) << std::endl;
 	}
+	#ifdef DEBUG
 	std::cout << "Your entered key: " << *key << " has size " << key->size()  << std::endl;
 	std::cout << "The created longKey has size " << longKey->size() << std::endl;
 	std::cout << "longKey has been created " << std::endl;
+	#endif
 
 	#ifdef DEBUG1
 	for(unsigned int i=0; i<seed.size(); i++)
