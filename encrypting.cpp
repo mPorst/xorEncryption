@@ -17,9 +17,6 @@
 
 void getString(std::string* key)
 {
-	std::cout << "Now you are going to specify your key. You need to remember it in order to decrypt your files again." << std::endl
-	<< "Anyway, do NOT save your key next to the encrypted files. This would make the encryption useless." <<std::endl
-	<< "Please enter your key:" << std::endl;
 	std::cin >> *key;
 }
 
